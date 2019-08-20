@@ -132,14 +132,19 @@ export default {
           //   console.log(err)
           // })
           // console.log(this.registerFrom)
-         
-          this.axios.post('/api/register',this.registerFrom)
-          .then(res=>{
-            console.log(res)
-          }).catch(err=>{
-            // alert('ll',err)
-            alert(err)
-          })
+
+          this.axios
+            .post("/api/register", this.registerFrom)
+            .then(res => {
+              // console.log(res)
+              this.$message(res.data.message);
+              this.registerFrom = {};
+              this.$router.push({ "path": "/login" });
+            })
+            .catch(err => {
+              // alert('ll',err)
+              // alert(err)
+            });
         } else {
           console.log("error submit!!");
           return false;

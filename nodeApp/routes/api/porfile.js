@@ -17,11 +17,11 @@ router.post('/porfile', passport.authenticate('jwt', { session: false }), (req, 
     // })
     // console.log(res)
     var newPorfile = new Porfile({
-        describe: req.body.describe,
-        income: req.body.income,
+       
+        product: req.body.product,
         expend: req.body.expend,
-        cash: req.body.cash,
-        Remarks: req.body.Remarks,
+        describe: req.body.describe,
+        balance: req.body.balance,
         name : req.user.name
     })
     newPorfile.save()
@@ -85,8 +85,8 @@ router.get('/allInformation', passport.authenticate('jwt', { session: false }), 
 
 
 // //获取单个信息
-router.get('/allInformation/single/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Porfile.findOne({ _id: req.param.id })
+router.get('/allInformation/single', passport.authenticate('jwt', { session: false }), (req, res) => {
+    Porfile.findOne({ _id: req.query.id })
         .then(porfile => {
             // console.log(porfile)
             if (!porfile) {

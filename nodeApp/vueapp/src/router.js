@@ -49,7 +49,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   // console.log(to, from, next)
   if (!localStorage.getItem('token')) {
-    if (to.path === '/login' || to.path === '/register' || to.path === '/404') {
+    if (to.path === '/login' || to.path === '/register') {
       next()
     } else {
       next('/login')
