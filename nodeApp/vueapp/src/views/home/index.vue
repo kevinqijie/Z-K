@@ -1,9 +1,9 @@
 <template>
   <div class="home">
-    <Headers />
+    <headers />
     
     <div class="main">
-      <Side />
+      <side />
       <router-view></router-view>
     </div>
  
@@ -12,13 +12,13 @@
 
 <script>
 // import jwt from 'jwt-decode'
-import Headers from "@/components/header";
-import Side from '@/components/Side'
+import headers from "@/components/Header";
+import side from '@/components/Side'
 export default {
   name: "home",
   components: {
-    Headers,
-    Side
+    headers,
+    side
   },
  data () {
    return {

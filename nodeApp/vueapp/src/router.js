@@ -17,22 +17,22 @@ const router = new Router({
     {
       path: '/home',
       name: 'home',
-      component: () => import(/* webpackChunkName: "about" */ './views/home'),
+      component: () => import(/* webpackChunkName: "about" */ './views/Home'),
       children: [{
         path: '/',
-        name: '/zj',
-        component: () => import(/* webpackChunkName: "about" */ './views/zj')
+        name: 'bill',
+        component: () => import(/* webpackChunkName: "about" */ './views/Bill')
       }]
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import(/* webpackChunkName: "about" */ './views/login')
+      component: () => import(/* webpackChunkName: "about" */ './views/Login')
     },
     {
       path: '/register',
       name: 'register',
-      component: () => import(/* webpackChunkName: "about" */ './views/register')
+      component: () => import(/* webpackChunkName: "about" */ './views/Register')
     },
     {
       path: '/404',
