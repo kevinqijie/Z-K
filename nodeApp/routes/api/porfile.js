@@ -120,11 +120,18 @@ router.post('/porfile/edit', passport.authenticate('jwt', { session: false }), (
         Remarks: req.body.Remarks
     }
     Porfile.findOneAndUpdate({ _id: req.body.id }, { $set: newPorfile }, { new: true })
-        .then(pro => {
+        .then(por => {
+           if(por){
             res.json({
                 msg: 1,
                 message: `id:${req.body.id} 更改成功`
             })
+           }else{
+               res.status('400').json({
+                   msg:'0',
+                   message: `id:${req.body.id}更新失败`
+               })
+           }
         })
 
 })

@@ -19,7 +19,7 @@ module.exports = passport =>{
     //进行token 验证
     // @jwt_payload token携带信息
     passport.use(new JwtStrategy(opts, (jwt_payload, done) =>{
-        // console.log(jwt_payload)
+        console.log(jwt_payload)
         User.findOne({ _id : jwt_payload.id})
        
         .then(user=>{

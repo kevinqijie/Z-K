@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 //引入路由
 const users = require('./routes/api/user')
 const porfile = require('./routes/api/porfile')
+const Products = require('./routes/api/Products')
 
 
 const passport = require('passport');
@@ -60,6 +61,7 @@ require('./config/passport')(passport);
 //设置路由根路径
 app.use('/api',users);
 app.use('/api',porfile);
+app.use('/api',Products);
 
 const port = process.env.PORT || 5000;
 

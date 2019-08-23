@@ -12,13 +12,13 @@ const passport = require('passport')
 
 //$route 请求方式 Get 路径'api/test'
 
-router.get('/test', (req, res) => {
-    // console.log(req.body.email)
-    res.send({
-        msg: 'login works'
-    })
-    // console.log(res)
-})
+// router.get('/test', (req, res) => {
+//     // console.log(req.body.email)
+//     res.send({
+//         msg: 'login works'
+//     })
+//     // console.log(res)
+// })
 
 
 //注册接口
