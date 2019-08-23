@@ -31,9 +31,21 @@ router.post('/SetProducts',passport.authenticate('jwt', { session: false }),(req
       res.json(err)
     })
 })
+router.get('/getProducts',passport.authenticate('jwt', { session: false }),(req,res)=>{
+  products.find().then(pro=>{
+    console.log(pro)
+    if (pro) {
+       res.json({
+         msg:'1',
+         data:pro
+       })
+    }
+  })
 
+
+})
 //获取单个信息
-router.get('/SetProducts',passport.authenticate('jwt', { session: false }),(req,res)=>{
+router.get('/getOneProducts',passport.authenticate('jwt', { session: false }),(req,res)=>{
      products.findOne({_id:req.query.id}).then(pro=>{
        console.log(pro)
        if (pro) {

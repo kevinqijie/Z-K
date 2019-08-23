@@ -1,30 +1,30 @@
 <template>
   <div class="home">
     <headers />
-    
+
     <div class="main">
       <side />
       <router-view></router-view>
     </div>
- 
+
   </div>
 </template>
 
 <script>
 // import jwt from 'jwt-decode'
-import headers from "@/components/Header";
+import headers from '@/components/Header';
 import side from '@/components/Side'
 export default {
-  name: "home",
+  name: 'home',
   components: {
     headers,
     side
   },
- data () {
-   return {
-     token:''
-   }
- },
+  data () {
+    return {
+      token: ''
+    }
+  },
   methods: {
     //  jtoken(){
     //   var token = this.$store.state.token
@@ -33,7 +33,7 @@ export default {
     //   window.location.href = token.avatar
     //  }
   }
-};
+}
 </script>
 
 <style>
