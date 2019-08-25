@@ -31,9 +31,10 @@ router.post('/SetProducts',passport.authenticate('jwt', { session: false }),(req
       res.json(err)
     })
 })
+// 获取全部产品信息
 router.get('/getProducts',passport.authenticate('jwt', { session: false }),(req,res)=>{
   products.find().then(pro=>{
-    console.log(pro)
+    // console.log(pro)
     if (pro) {
        res.json({
          msg:'1',
@@ -47,7 +48,7 @@ router.get('/getProducts',passport.authenticate('jwt', { session: false }),(req,
 //获取单个信息
 router.get('/getOneProducts',passport.authenticate('jwt', { session: false }),(req,res)=>{
      products.findOne({_id:req.query.id}).then(pro=>{
-       console.log(pro)
+      //  console.log(pro,req.query.id)
        if (pro) {
           res.json({
             msg:'1',
@@ -68,9 +69,10 @@ router.post('/SetProducts/edit',passport.authenticate('jwt', { session: false })
       Quantity : req.body.Quantity, 
       describe :req.body.describe
   }
-
-  products.findOneAndUpdate({ _id: req.body.id }, { $set: newsprodcts }, { new: true })
+  products.findOneAndUpdate({ _id: req.body._id }, { $set: newsprodcts }, { new: true })
+  
   .then(pro=>{
+    
      if (pro) {
        res.json({
          msg:'1',
@@ -79,6 +81,17 @@ router.post('/SetProducts/edit',passport.authenticate('jwt', { session: false })
      }
   
   })
+})
+
+router.delete('/deletepro',(req,res)=>{
+        products.findOneAndRemove({_id : req.body.id})
+        .then(pro=>{
+          console.log(pro)
+          res.json({
+            msg:"1",
+            message :"删除成功"
+          })
+        })
 })
 
 module.exports = router;

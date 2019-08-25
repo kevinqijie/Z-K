@@ -8,19 +8,6 @@ const passport = require('passport')
 
 
 
-
-
-//$route 请求方式 Get 路径'api/test'
-
-// router.get('/test', (req, res) => {
-//     // console.log(req.body.email)
-//     res.send({
-//         msg: 'login works'
-//     })
-//     // console.log(res)
-// })
-
-
 //注册接口
 router.post('/register', (req, res) => {
     // console.log(req.body)
@@ -128,7 +115,7 @@ router.post('/login', (req, res) => {
                             identity: user.identity
                         }
                         // 规则 rule  加密名字 secret   过期时间expiresIn:3600  回调()=>{}
-                        jwt.sign(rule, 'secret', { expiresIn: 3600 }, (err, token) => {
+                        jwt.sign(rule, 'secret', { expiresIn: 36000 }, (err, token) => {
                             if (err) throw err;
                             res.json({
                                 msg: "1",
@@ -155,16 +142,46 @@ router.post('/login', (req, res) => {
 //获取个人信息接口 @前端可自行解析token
 router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
     // res.json({msg : '0'})
-    //  console.log(req,1)
-    res.json({
-        msg: '0',
-        data: {
-            id: req.user.id,
-            name: req.user.name,
-            eamil: req.user.email,
-            identity: req.user.identity
-        }
-    })
+     console.log(req.user)
+   User.findOne({_id : req.user._id})
+   .then(user=>{
+       res.json({
+           msg:"1",
+            data:{
+                Balance : user.Balance,
+                name :  user.name,
+                id :user._id,
+                email: user.email,
+                avatar :user.avatar,
+                identity :user.identity,
+                date : user.date
+            }
+       })
+   })
 })
 
-module.exports = router
+//充值接口
+router.post('/upBalance',passport.authenticate('jwt', { session: false }),(req,res)=>{
+     
+
+    User.findOne({_id : req.user._id})
+    .then( use =>{
+        // console.log(use)
+        var ba =  +req.body.Balance
+        var newuser = use
+            newuser.Balance  =   newuser.Balance + ba;
+            // console.log(newuser)
+
+            User.findByIdAndUpdate({_id : newuser._id},{$set : newuser},{new :true})
+            .then(user=>{
+                // console.log(user)
+                if(user){
+                    res.json({
+                        msg:"1",
+                        message :'更新成功'
+                    })
+                }
+            })
+    })
+})
+module.exports = router;

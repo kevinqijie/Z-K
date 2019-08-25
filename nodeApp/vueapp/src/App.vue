@@ -1,18 +1,17 @@
 <template>
   <div id="app">
-   
-     
+
       <router-view/>
-  
+
   </div>
 </template>
 <script>
 import jwt from 'jwt-decode'
 export default {
-  name:'app',
-  created(){
- var token = localStorage.getItem('token');
-     this.$store.dispatch('jToken',jwt(token))
+  name: 'app',
+  created () {
+    var token = localStorage.getItem('token')
+    this.$store.dispatch('jToken', jwt(token))
   }
 }
 </script>

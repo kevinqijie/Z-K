@@ -17,6 +17,7 @@ const router = new Router({
     {
       path: '/home',
       name: 'home',
+      redirect: '/home/bill',
       component: () => import(/* webpackChunkName: "about" */ './views/Home'),
       children: [{
         path: '/home/bill',
@@ -27,6 +28,11 @@ const router = new Router({
         path: '/home/products',
         name: 'products',
         component: () => import(/* webpackChunkName: "about" */ './views/Products')
+      },
+      {
+        path: '/home/Personal',
+        name: 'personal',
+        component: () => import(/* webpackChunkName: "about" */ './views/Personal')
       }]
     },
     {

@@ -35,6 +35,10 @@ const PorfileSchema = new Schema({
     balance: {
         type: String,
         required: true
+    },
+    //产品id
+    productId : {
+        type:String
     }
 })
 

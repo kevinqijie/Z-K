@@ -45,84 +45,84 @@
 </template>
 
 <script>
-// import { register } from "../../api/user";
+import { register } from '../../api/user'
 
 export default {
-  name: "register",
-  data() {
+  name: 'register',
+  data () {
     var validateEmail = (rule, value, callback) => {
-      const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
-      if (value === "") {
-        callback(new Error("请输入邮箱"));
+      const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+      if (value === '') {
+        callback(new Error('请输入邮箱'))
       } else if (mailReg.test(value)) {
-        callback();
+        callback()
       } else {
-        callback(new Error("请输入正确的邮箱格式"));
+        callback(new Error('请输入正确的邮箱格式'))
       }
-    };
+    }
     var validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
+      if (value === '') {
+        callback(new Error('请输入密码'))
       } else {
-        if (this.registerFrom.checkPass !== "") {
-          this.$refs.registerFrom.validateField("checkPass");
+        if (this.registerFrom.checkPass !== '') {
+          this.$refs.registerFrom.validateField('checkPass')
         }
-        callback();
+        callback()
       }
-    };
+    }
     var validatePass2 = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请再次输入密码"));
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
       } else if (value !== this.registerFrom.password) {
-        callback(new Error("两次输入密码不一致!"));
+        callback(new Error('两次输入密码不一致!'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     var validateIdentity = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请选择身份"));
+      if (value === '') {
+        callback(new Error('请选择身份'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     var validateName = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入用户名"));
+      if (value === '') {
+        callback(new Error('请输入用户名'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       registerFrom: {
-        email: "",
-        name: "",
-        password: "",
-        checkPass: "",
-        identity: ""
+        email: '',
+        name: '',
+        password: '',
+        checkPass: '',
+        identity: ''
       },
       options: [
         {
-          value: "admin"
+          value: 'admin'
         },
         {
-          value: "user"
+          value: 'user'
         }
       ],
       rules: {
-        email: [{ validator: validateEmail, trigger: "blur" }],
+        email: [{ validator: validateEmail, trigger: 'blur' }],
         pass: [
-          { validator: validatePass, trigger: "blur" },
-          { min: 6, max: 25, message: "长度在 6 到 25 个字符" }
+          { validator: validatePass, trigger: 'blur' },
+          { min: 6, max: 25, message: '长度在 6 到 25 个字符' }
         ],
-        checkPass: [{ validator: validatePass2, trigger: "blur" }],
-        identity: [{ validator: validateIdentity, trigger: "blur" }],
-        name: [{ validator: validateName, trigger: "blur" }]
+        checkPass: [{ validator: validatePass2, trigger: 'blur' }],
+        identity: [{ validator: validateIdentity, trigger: 'blur' }],
+        name: [{ validator: validateName, trigger: 'blur' }]
       }
-    };
+    }
   },
   methods: {
-    submitForm(formName) {
+    submitForm (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           // register(this.registerFrom).then(res=>{
@@ -133,29 +133,31 @@ export default {
           // })
           // console.log(this.registerFrom)
 
-          this.axios
-            .post("/api/register", this.registerFrom)
+          register(this.registerFrom)
             .then(res => {
               // console.log(res)
-              this.$message(res.data.message);
-              this.registerFrom = {};
-              this.$router.push({ "path": "/login" });
+              this.$message({
+                type: 'success',
+                message: '注册成功'
+              })
+              this.registerFrom = {}
+              this.$router.push({ 'path': '/login' })
             })
             .catch(err => {
-              // alert('ll',err)
-              // alert(err)
-            });
+              this.$message({ message: err.message, type: 'error' })
+              alert(err)
+            })
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
     }
   }
-};
+}
 </script>
 
 <style>

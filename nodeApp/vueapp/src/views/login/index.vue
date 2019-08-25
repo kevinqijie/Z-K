@@ -30,74 +30,67 @@
   </div>
 </template>
 <script>
-import {login} from '../../api/user'
+import jwt from 'jwt-decode'
+import { login } from '../../api/user'
 export default {
-  name: "login",
-  data() {
+  name: 'login',
+  data () {
     var validateEmail = (rule, value, callback) => {
-      const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
-      if (value === "") {
-        callback(new Error("请输入邮箱"));
+      const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+      if (value === '') {
+        callback(new Error('请输入邮箱'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     var validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
+      if (value === '') {
+        callback(new Error('请输入密码'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
 
     return {
       loginFrom: {
-        email: "",
-        password: ""
+        email: '',
+        password: ''
       },
 
       rules: {
-        email: [{ validator: validateEmail, trigger: "blur" }],
-        pass: [{ validator: validatePass, trigger: "blur" }]
+        email: [{ validator: validateEmail, trigger: 'blur' }],
+        pass: [{ validator: validatePass, trigger: 'blur' }]
       }
-    };
+    }
   },
   methods: {
-    submitForm(formName) {
+    submitForm (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log(this.loginFrom)
-          // login(this.loginFrom).then(res=>{
-
-          //   console.log(res)
-          // })
-          // .catch(err=>{
-          //   console.log(err)
-          // })
-          // console.log(this.loginFrom)
-
-          this.axios
-            .post("/api/login", this.loginFrom)
+          login(this.loginFrom)
             .then(res => {
-              localStorage.setItem('token',res.data.token);
-              this.$router.push({'path':'/home'})
+              console.log(res)
+              localStorage.setItem('token', res.data.token)
+              this.$router.push({ 'path': '/home' })
+              this.$message({ message: '登陆成功', type: 'success' })
+              var token = localStorage.getItem('token')
+              this.$store.dispatch('jToken', jwt(token))
             })
             .catch(err => {
-              // alert('ll',err)
-              alert(err);
-            });
+              this.$message({ message: err.message, type: 'error' })
+            })
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
-    toRegister() {
-      console.log(1)
-      this.$router.push({'path':'/register'})
+    toRegister () {
+      // console.log(1)
+      this.$router.push({ 'path': '/register' })
     }
   }
-};
+}
 </script>
 
 <style>

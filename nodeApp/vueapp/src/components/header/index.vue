@@ -22,17 +22,31 @@
 
 <script>
 export default {
-  name: "Head",
-  methods:{
-     handleCommand(command) {
-        this.$message('click on item ' + command);
-      }
+  name: 'Head',
+  data () {
+    return {
+      token: ''
+    }
   },
- created(){
-   this.token = this.$store.state.token;
-  
- }
-};
+  methods: {
+    handleCommand (command) {
+      // this.$message('click on item ' + command)
+      switch (command) {
+        case 'a':
+          // alert('a')
+          this.$router.push({ 'path': '/home/personal' })
+          break
+        case 'b':
+          localStorage.removeItem('token')
+          this.$router.push({ 'path': '/login' })
+          break
+      }
+    }
+  },
+  created () {
+    this.token = this.$store.state.token
+  }
+}
 </script>
 
 <style scoped>
@@ -58,7 +72,7 @@ export default {
 .userlist{
   padding: 0 20px;
   position: relative;
-  
+
 }
 .sp{
   /* margin:5px;

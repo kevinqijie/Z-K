@@ -1,4 +1,5 @@
 import axios from 'axios'
+import $axios from './axios'
 
 export function register (data) {
   return axios({
@@ -11,7 +12,21 @@ export function register (data) {
 export function login (data) {
   return axios({
     url: '/api/login',
-    method: 'get',
+    method: 'post',
+    data
+  })
+}
+
+export function getcurrent () {
+  return $axios({
+    url: '/api/current',
+    method: 'get'
+  })
+}
+export function postBla (data) {
+  return $axios({
+    url: '/api/upBalance',
+    method: 'post',
     data
   })
 }

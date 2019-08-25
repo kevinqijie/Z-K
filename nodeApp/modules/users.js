@@ -29,6 +29,10 @@ const UserSchema = new Schema({
     identity:{
      type:String,
      required : true
+    },
+    Balance:{
+        type : Number,
+        default: 0
     }
 })
 
