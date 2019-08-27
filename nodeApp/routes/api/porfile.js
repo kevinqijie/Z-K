@@ -37,45 +37,54 @@ router.post('/porfile', passport.authenticate('jwt', { session: false }), (req, 
         .then(use => {
             if (use) {
                 var newUse = use
-                newUse.Balance = newUse.Balance - req.body.expend
-                User.findOneAndUpdate({ _id: req.user._id }, { $set: newUse }, { new: true })
-                    .then(Use => {
-                        if (Use) {
-                            console.log(Use)
-                            var newPorfile = new Porfile({
-
-                                product: req.body.product,
-                                expend: req.body.expend,
-                                describe: req.body.describe,
-                                balance: Use.Balance,
-                                name: req.user.name,
-                                productId : req.body.productId
-                            })
-                            newPorfile.save()
-                                .then(porfile => {
-                                   if(porfile){
-                                       Products.findOne({_id:req.body.productId})
-                                       .then(pds=>{
-                                           if(pds){
-                                               var newPds = pds
-                                                 newPds.Quantity = newPds.Quantity - req.body.Quantity
-                                                 Products.findOneAndUpdate({_id :req.body.productId},{$set:newPds},{new:true})
-                                                 .then(Prod=>{
-                                                     if(Prod){
-                                                         res.json({
-                                                             message:"购买成功"
-                                                         })
-                                                     }
-                                                 })
-                                           }
-                                       })
-                                   }
-                                })
-                                .catch(err => {
-                                    res.json(err)
-                                })
-                        }
+                if(newUse.Balance <req.body.expend){
+                 return   res.status(404).json({
+                        msg :'0',
+                        message:"余额不足"
+            
                     })
+                }else{
+                    newUse.Balance = newUse.Balance - req.body.expend
+                    User.findOneAndUpdate({ _id: req.user._id }, { $set: newUse }, { new: true })
+                        .then(Use => {
+                            if (Use) {
+                                console.log(Use)
+                                var newPorfile = new Porfile({
+    
+                                    product: req.body.product,
+                                    expend: req.body.expend,
+                                    describe: req.body.describe,
+                                    balance: Use.Balance,
+                                    name: req.user.name,
+                                    productId : req.body.productId
+                                })
+                                newPorfile.save()
+                                    .then(porfile => {
+                                       if(porfile){
+                                           Products.findOne({_id:req.body.productId})
+                                           .then(pds=>{
+                                               if(pds){
+                                                   var newPds = pds
+                                                     newPds.Quantity = newPds.Quantity - req.body.Quantity
+                                                     Products.findOneAndUpdate({_id :req.body.productId},{$set:newPds},{new:true})
+                                                     .then(Prod=>{
+                                                         if(Prod){
+                                                             res.json({
+                                                                 message:"购买成功"
+                                                             })
+                                                         }
+                                                     })
+                                               }
+                                           })
+                                       }
+                                    })
+                                    .catch(err => {
+                                        res.json(err)
+                                    })
+                            }
+                        })
+                }
+               
             }
         })
 })

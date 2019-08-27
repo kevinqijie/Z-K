@@ -21,3 +21,10 @@ export function deleteinformation (data) {
     data
   })
 }
+export function postInf (data) {
+  return axios({
+    url: '/api/porfile',
+    method: 'post',
+    data
+  })
+}

@@ -161,14 +161,58 @@
         </div>
       </el-card>
     </div>
+    <!--购买-->
+    <div class="mack" v-if="mack4">
+      <el-card class="box-card" v-loading="loading1">
+        <h1>购买</h1>
+        <div class="list">
+          <ul>
+            <li>
+              <span>产品名：</span>
+             <span>{{buylist.product}}</span>
+            </li>
+
+            <li>
+              <span>产品描述：</span>
+             <span>{{buylist.describe}}</span>
+            </li>
+            <li>
+              <span>单价（元）：</span>
+             <span>{{buylist.price}}</span>
+            </li>
+            <li>
+              <span>购买数量（个）：</span>
+              <input type="text"  v-model="buylist.Quantity" />
+            </li>
+            <li>
+              <span>总价</span>
+              <span>{{buylist.expend}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="btnbox">
+          <el-button class="add" type="primary" @click="setInf()">购买</el-button>
+          <el-button class="close" type="danger" @click="closeMack(4)">关闭</el-button>
+        </div>
+      </el-card>
+    </div>
   </div>
 </template>
 
 <script>
 import { getpro, getOnepro, postOnepro, setpro, delpro } from '../../api/pro'
+import { postInf } from '../../api/information'
 
 export default {
   name: 'Products',
+  watch: {
+    buylist: {
+      handler (val, oldVal) {
+        this.buylist.expend = this.buylist.Quantity * this.buylist.price
+      },
+      deep: true
+    }
+  },
   data () {
     return {
       inData: [],
@@ -179,16 +223,36 @@ export default {
       prodetailsData: '',
       loading1: false,
       mack3: false,
+      mack4: false,
       fromData: {
         name: '',
         price: '',
         Quantity: '',
         describe: ''
+      },
+      buylist: {
+        product: '',
+        expend: '',
+        describe: '',
+        productId: '',
+        Quantity: '0',
+        price: ''
+
       }
 
     }
   },
   methods: {
+    setInf () {
+      if (this.buylist.Quantity !== 0) {
+        postInf(this.buylist)
+          .then(res => {
+            this.mack4 = false
+            this.getpro()
+          })
+      }
+      alert('shuxiang')
+    },
     setpro (data) {
       this.loading1 = true
       console.log(1)
@@ -261,18 +325,32 @@ export default {
       })
     },
     handleBuy (id) {
-      console.log(id)
+      this.mack4 = true
+      getOnepro(id).then(res => {
+        this.buylist.product = res.data.data.name
+        this.buylist.price = res.data.data.price
+        this.buylist.describe = res.data.data.describe
+        this.buylist.productId = res.data.data._id
+        console.log(this.buylist)
+      }).catch(err => {
+        console.log(err)
+      })
     },
     closeMack (index) {
       switch (index) {
-        case '1':
+        case 1:
           this.mack1 = false
           break
-        case '2':
+        case 2:
           this.mack2 = false
           break
-        case '3':
+        case 3:
           this.mack3 = false
+
+          break
+        case 4:
+          this.mack4 = false
+          this.buylist.Quantity = '0'
           break
       }
     },
