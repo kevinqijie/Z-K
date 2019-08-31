@@ -6,8 +6,9 @@
      <span>头像</span> <img :src="current.avatar" alt="">
      <el-upload
   class="upload-demo"
-  action="https://jsonplaceholder.typicode.com/posts/"
-
+  action="/api/changePortrait"
+:headers ='headers'
+:on-success ='success'
    :show-file-list = "false"
   list-type="picture">
   <el-button size="small" type="primary">点击上传</el-button>
@@ -44,10 +45,18 @@ export default {
     }
   },
   methods: {
+    success (res, file, fileList) {
+      console.log(res)
+      this.getcurrent()
+      this.$router.go(0)
+    },
     getcurrent () {
       getcurrent()
         .then(res => {
           this.current = res.data.data
+          console.log(res)
+          localStorage.removeItem('token')
+          localStorage.setItem('token', res.data.token)
           this.current.date = this.ChangeDate(this.current.date)
         })
     },
@@ -92,6 +101,13 @@ export default {
   },
   created () {
     this.getcurrent()
+  },
+  computed: {
+    headers () {
+      return {
+        'Authorization': localStorage.getItem('token') // 直接从本地获取token就行
+      }
+    }
   }
 }
 </script>

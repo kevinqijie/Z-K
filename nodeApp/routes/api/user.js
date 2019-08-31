@@ -6,7 +6,8 @@ const gravatar = require('gravatar');
 const jwt = require('jsonwebtoken');
 const passport = require('passport')
 
-
+const fs = require('fs')
+const formidable = require('formidable')
 
 //注册接口
 router.post('/register', (req, res) => {
@@ -41,12 +42,14 @@ router.post('/register', (req, res) => {
                     bcrypt.hash(newUser.password, salt, function (err, hash) {
                         // Store hash in your password DB.
                         console.log(newUser.password)
-                        if (err) { res.json({
+                        if (err) {
+                            res.json({
 
-                            msg : 0,
-                            message : '加密失败',
-                            err 
-                        })};
+                                msg: 0,
+                                message: '加密失败',
+                                err
+                            })
+                        };
 
                         newUser.password = hash;
                         // console.log(newUser)
@@ -60,10 +63,12 @@ router.post('/register', (req, res) => {
                                     message: '注册成功'
                                 })
                             })
-                            .catch(err => { res.json({
-                                msg : 0,
-                                message : '注册失败'
-                            }) })
+                            .catch(err => {
+                                res.json({
+                                    msg: 0,
+                                    message: '注册失败'
+                                })
+                            })
                     });
                 });
 
@@ -94,7 +99,7 @@ router.post('/login', (req, res) => {
 
     //  console.log(email,password,req.query)
     //User.findOne('item') 
-    User.findOne({ email  })
+    User.findOne({ email })
 
         .then(user => {
             if (!user) {
@@ -140,48 +145,82 @@ router.post('/login', (req, res) => {
 // passport.authenticate('jwt',{session:false}) 验证路由及接口中的token
 // 请求携带token 
 //获取个人信息接口 @前端可自行解析token
-router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
-    // res.json({msg : '0'})
-     console.log(req.user)
-   User.findOne({_id : req.user._id})
-   .then(user=>{
-       res.json({
-           msg:"1",
-            data:{
-                Balance : user.Balance,
-                name :  user.name,
-                id :user._id,
-                email: user.email,
-                avatar :user.avatar,
-                identity :user.identity,
-                date : user.date
+router.get('/current',passport.authenticate('jwt', { session: false }), (req, res) => {
+   
+    User.findOne({ _id: req.user._id })
+        .then(user => {
+            var rules = {
+                id: user.id,
+                name: user.name,
+                avatar: user.avatar,
+                identity: user.identity
             }
-       })
-   })
+            // 规则 rule  加密名字 secret   过期时间expiresIn:3600  回调()=>{}
+            jwt.sign(rules, 'secret', { expiresIn: 36000 },(err,tokens)=> {
+                if (err) throw err;
+                res.json({
+                    msg: "1",
+                    token: "Bearer " + tokens,
+                    data : user      
+                })
+            })
+          
+        })
 })
 
 //充值接口
-router.post('/upBalance',passport.authenticate('jwt', { session: false }),(req,res)=>{
-     
+router.post('/upBalance', passport.authenticate('jwt', { session: false }), (req, res) => {
 
-    User.findOne({_id : req.user._id})
-    .then( use =>{
-        // console.log(use)
-        var ba =  +req.body.Balance
-        var newuser = use
-            newuser.Balance  =   newuser.Balance + ba;
+
+    User.findOne({ _id: req.user._id })
+        .then(use => {
+            // console.log(use)
+            var ba = +req.body.Balance
+            var newuser = use
+            newuser.Balance = newuser.Balance + ba;
             // console.log(newuser)
 
-            User.findByIdAndUpdate({_id : newuser._id},{$set : newuser},{new :true})
-            .then(user=>{
-                // console.log(user)
-                if(user){
-                    res.json({
-                        msg:"1",
-                        message :'更新成功'
+            User.findByIdAndUpdate({ _id: newuser._id }, { $set: newuser }, { new: true })
+                .then(user => {
+                    // console.log(user)
+                    if (user) {
+                        res.json({
+                            msg: "1",
+                            message: '更新成功'
+                        })
+                    }
+                })
+        })
+})
+
+router.post('/changePortrait', passport.authenticate('jwt', { session: false }), (req, res) => {
+    const form = new formidable.IncomingForm()
+    form.parse(req, (err, fields, files) => {
+        var url = `public/${files.file.name}`
+        //   console.log(url)
+        fs.writeFileSync(url, fs.readFileSync(files.file.path))
+        console.log(req.user)
+        User.findOne({ _id: req.user._id })
+            .then(use => {
+                // console.log(use)
+                var avatar = 'http://localhost:5000/'+ url
+                var newuser = use
+                newuser.avatar = avatar
+                // console.log(newuser)
+
+                User.findByIdAndUpdate({ _id: newuser._id }, { $set: newuser }, { new: true })
+                    .then(user => {
+                        // console.log(user)
+                        if (user) {
+                            res.json({
+                                msg: "1",
+                                message: '更新成功',
+                                user
+                            })
+                        }
                     })
-                }
             })
     })
+
 })
 module.exports = router;
