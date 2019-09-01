@@ -8,7 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 
 axios.defaults.headers['Content-Type'] = 'application/json; charset=utf-8'
 Vue.prototype.axios = axios
-
+axios.defaults.baseURL = 'http://localhost:5000'
 Vue.config.productionTip = false
 // Vue.filter('setWH', (url, num) => {
 //   return url.replace(/w\.h/, num)
