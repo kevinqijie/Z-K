@@ -10,37 +10,14 @@
           text-color="#fff"
           active-text-color="#ffd04b"
         >
-          <router-link tag="div" to="/home/bill">
+          <router-link tag="div" :to="it.path" v-for="(it,i) in meun" :key='i'>
             <el-menu-item >
               <i class="el-icon-menu"></i>
               <!-- <router-link tag='span' slot="title">导航一</router-link> -->
-              <span slot="title">账单</span>
+              <span slot="title">{{it.meta.title}}</span>
             </el-menu-item>
           </router-link>
-          <router-link tag='div' to="/home/products">
-          <el-menu-item >
-            <i class="el-icon-menu"></i>
-            <span slot="title">
-              产品
-            </span>
-          </el-menu-item>
-          </router-link>
-           <router-link tag='div' to="/home/bill">
-          <el-menu-item >
-            <i class="el-icon-document"></i>
-            <span slot="title">
-             导航一2
-            </span>
-          </el-menu-item>
-          </router-link>
-          <router-link tag='div' to="/home/bill">
-          <el-menu-item >
-            <i class="el-icon-setting"></i>
-            <span slot="title">
-              导航一
-            </span>
-          </el-menu-item>
-          </router-link>
+
         </el-menu>
       </el-col>
     </el-row>
@@ -50,7 +27,15 @@
 
 <script>
 export default {
-  name: 'Sider'
+  name: 'Sider',
+  data () {
+    return {
+      meun: ''
+    }
+  },
+  created () {
+    this.meun = this.$store.state.meun
+  }
 }
 </script>
 

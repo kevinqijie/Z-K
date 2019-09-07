@@ -38,7 +38,16 @@ export default {
           break
         case 'b':
           localStorage.removeItem('token')
+          console.log('qin t')
+          this.$store.dispatch('jToken', [])
+          console.log('qin m')
+          this.$store.dispatch('jmeun', [])
+          console.log('qin e')
+          this.$store.dispatch('jTess', null)
+          this.$store.dispatch('jrouter', null)
+          // this.$store.dispatch('jmeun', '')
           this.$router.push({ 'path': '/login' })
+          window.location.reload()
           break
       }
     }

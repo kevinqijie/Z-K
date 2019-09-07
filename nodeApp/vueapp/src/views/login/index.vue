@@ -32,6 +32,7 @@
 <script>
 import jwt from 'jwt-decode'
 import { login } from '../../api/user'
+import { routermap } from '../../router'
 export default {
   name: 'login',
   data () {
@@ -69,12 +70,20 @@ export default {
         if (valid) {
           login(this.loginFrom)
             .then(res => {
-              console.log(res)
+              // console.log(res)
               localStorage.setItem('token', res.data.token)
-              this.$router.push({ 'path': '/home' })
               this.$message({ message: '登陆成功', type: 'success' })
-              var token = localStorage.getItem('token')
-              this.$store.dispatch('jToken', jwt(token))
+              this.$store.dispatch('jToken', jwt(res.data.token))
+              var te = jwt(res.data.token).identity
+              this.$store.commit('setTess', te)
+              // console.log('c', routermap)
+              this.$store.commit('setromap', routermap)
+              this.$router.addRoutes(this.$store.state.router.concat([{ // 这里调用addRoutes方法，动态添加符合条件的路由
+                path: '*',
+                redirect: '/404' // 所有不匹配路径(*)都重定向到404，为什么写在这里而不放到静态路由表里可以查看“前端路上”的文章
+              }]))
+
+              this.$router.push({ 'path': '/home' })
             })
             .catch(err => {
               this.$message({ message: err.message, type: 'error' })

@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 // import Home from './views/Home.vue'
-
+// import store from './store'
+// import jwt from 'jwt-decode'
 Vue.use(Router)
 
 const router = new Router({
@@ -29,12 +30,7 @@ const router = new Router({
       path: '/404',
       name: '404',
       component: () => import(/* webpackChunkName: "about" */ './views/404')
-    },
-    {
-      path: '*',
-      redirect: '/404'
     }
-
   ]
 })
 
@@ -50,51 +46,70 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
-var routermap = [{
+
+export const routermap = [{
   path: '/home',
   name: 'home',
   redirect: '/home/bill',
-  meta: { roles: 'admin' },
+  meta: { roles: 'admin,user', hide: true },
   component: () => import(/* webpackChunkName: "about" */ './views/Home'),
   children: [{
     path: '/home/bill',
     name: 'bill',
     component: () => import(/* webpackChunkName: "about" */ './views/Bill'),
-    meta: { roles: 'admin' }
+    meta: { roles: 'admin,user', title: '账单' }
   },
   {
     path: '/home/products',
     name: 'products',
     component: () => import(/* webpackChunkName: "about" */ './views/Products'),
-    meta: { roles: 'admin' }
+    meta: { roles: 'user', title: '产品' }
   },
   {
     path: '/home/Personal',
     name: 'personal',
     component: () => import(/* webpackChunkName: "about" */ './views/Personal'),
-    meta: { roles: 'admin' }
+    meta: { roles: 'admin', title: '信息' }
   }]
 }]
 
-function addrouter (role, romap) {
-  var newb = []
-  romap.forEach(it => {
-    // console.log(1)
+// function addrouter (role, romap) {
+//   var newb = []
+//   var meun = []
+//   romap.forEach(it => {
+//     // console.log(1)
 
-    if (it.meta.roles && it.meta.roles === role) {
-      if (it.children && it.children.length > 0) {
-        // return addrouter(role, it.children)
-        it.children = addrouter(role, it.children)
-        // console.log(a)
-      }
-      // console.log(2)
-      newb.push(it)
-    }
-  })
-  return newb
-}
-var c = addrouter('admin', routermap)
-console.log(c)
-// console.log('c:', c)
-router.addRoutes(c)
+//     if (it.meta.roles && it.meta.roles.indexOf(role) > -1) {
+//       if (it.children && it.children.length > 0) {
+//         // return addrouter(role, it.children)
+//         it.children = addrouter(role, it.children).newb
+//         // console.log(a)
+//         meun.push(...addrouter(role, it.children).meun)
+//       }
+//       // console.log(2)
+//       if (!it.meta.hide) {
+//         meun.push(it)
+//       }
+//       newb.push(it)
+//     }
+//   })
+//   return { newb, meun }
+// }
+// var te = store.state.token
+// if (localStorage.getItem('token')) {
+//   // console.log(te)
+//   var te = ''
+
+//   var token = localStorage.getItem('token')
+//   store.dispatch('jToken', jwt(token))
+//   te = store.state.token.identity
+
+//   // console.log(te)
+//   var { newb, meun } = addrouter(te, routermap)
+//   // console.log(c)
+//   // console.log('c:', c)
+//   store.dispatch('jmeun', meun)
+//   router.addRoutes(newb)
+// }
+// console.log(router)
 export default router
