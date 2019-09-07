@@ -14,27 +14,7 @@ const router = new Router({
       // component: Home
       redirect: '/home'
     },
-    {
-      path: '/home',
-      name: 'home',
-      redirect: '/home/bill',
-      component: () => import(/* webpackChunkName: "about" */ './views/Home'),
-      children: [{
-        path: '/home/bill',
-        name: 'bill',
-        component: () => import(/* webpackChunkName: "about" */ './views/Bill')
-      },
-      {
-        path: '/home/products',
-        name: 'products',
-        component: () => import(/* webpackChunkName: "about" */ './views/Products')
-      },
-      {
-        path: '/home/Personal',
-        name: 'personal',
-        component: () => import(/* webpackChunkName: "about" */ './views/Personal')
-      }]
-    },
+
     {
       path: '/login',
       name: 'login',
@@ -57,6 +37,7 @@ const router = new Router({
 
   ]
 })
+
 router.beforeEach((to, from, next) => {
   // console.log(to, from, next)
   if (!localStorage.getItem('token')) {
@@ -69,5 +50,51 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
+var routermap = [{
+  path: '/home',
+  name: 'home',
+  redirect: '/home/bill',
+  meta: { roles: 'admin' },
+  component: () => import(/* webpackChunkName: "about" */ './views/Home'),
+  children: [{
+    path: '/home/bill',
+    name: 'bill',
+    component: () => import(/* webpackChunkName: "about" */ './views/Bill'),
+    meta: { roles: 'admin' }
+  },
+  {
+    path: '/home/products',
+    name: 'products',
+    component: () => import(/* webpackChunkName: "about" */ './views/Products'),
+    meta: { roles: 'admin' }
+  },
+  {
+    path: '/home/Personal',
+    name: 'personal',
+    component: () => import(/* webpackChunkName: "about" */ './views/Personal'),
+    meta: { roles: 'admin' }
+  }]
+}]
 
+function addrouter (role, romap) {
+  var newb = []
+  romap.forEach(it => {
+    // console.log(1)
+
+    if (it.meta.roles && it.meta.roles === role) {
+      if (it.children && it.children.length > 0) {
+        // return addrouter(role, it.children)
+        it.children = addrouter(role, it.children)
+        // console.log(a)
+      }
+      // console.log(2)
+      newb.push(it)
+    }
+  })
+  return newb
+}
+var c = addrouter('admin', routermap)
+console.log(c)
+// console.log('c:', c)
+router.addRoutes(c)
 export default router
