@@ -50,6 +50,14 @@ export default new Vuex.Store({
     },
     setrouter (state, romap) {
       state.router = romap
+    },
+    esclogin (state) {
+      state = {
+        token: [],
+        meun: [],
+        role: '',
+        router: ''
+      }
     }
   },
   actions: {
@@ -64,6 +72,9 @@ export default new Vuex.Store({
     },
     jrouter (context, router) {
       context.commit('setrouter', router)
+    },
+    jlogin (context) {
+      context.commit('esclogin')
     }
   },
   getters: {

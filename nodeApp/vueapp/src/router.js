@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 // import Home from './views/Home.vue'
-// import store from './store'
-// import jwt from 'jwt-decode'
+import store from './store'
+import jwt from 'jwt-decode'
 Vue.use(Router)
 
 const router = new Router({
@@ -43,7 +43,19 @@ router.beforeEach((to, from, next) => {
       next('/login')
     }
   } else {
-    next()
+    if (!store.state.role) {
+      store.dispatch('jToken', jwt(localStorage.getItem('token')))
+      var te = jwt(localStorage.getItem('token')).identity
+      store.commit('setTess', te)
+      store.commit('setromap', routermap)
+      router.addRoutes(store.state.router.concat([{ // 这里调用addRoutes方法，动态添加符合条件的路由
+        path: '*',
+        redirect: '/404' // 所有不匹配路径(*)都重定向到404，为什么写在这里而不放到静态路由表里可以查看“前端路上”的文章
+      }]))
+      next({ ...to })
+    } else {
+      next()
+    }
   }
 })
 

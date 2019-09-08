@@ -1,5 +1,6 @@
 import axios from 'axios'
 import router from '../router'
+import store from '../store'
 
 axios.interceptors.request.use(
   config => {
@@ -27,6 +28,7 @@ axios.interceptors.response.use(
       switch (err.response.status) {
         case 401:
           localStorage.removeItem('token')
+          store.dispatch('jlogin')
           router.push({ path: '/login' })
       }
     }
