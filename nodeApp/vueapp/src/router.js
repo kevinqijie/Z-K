@@ -82,7 +82,14 @@ export const routermap = [{
     name: 'personal',
     component: () => import(/* webpackChunkName: "about" */ './views/Personal'),
     meta: { roles: 'admin', title: '信息' }
-  }]
+  },
+  {
+    path: '/home/ce',
+    name: 'ce',
+    component: () => import(/* webpackChunkName: "about" */ './views/ce'),
+    meta: { roles: 'adminuser', title: '测试' }
+  }
+  ]
 }]
 
 // function addrouter (role, romap) {
